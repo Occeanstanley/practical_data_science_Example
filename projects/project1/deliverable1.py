@@ -107,3 +107,6 @@ print(df)
 
 # Save results to CSV
 df.to_csv("url_validity_results.csv", index=False)
+
+user_prompt = "Are there any health risks for my newborn if I return home after an international flight?"
+url_to_check = "https://www.mayoclinic.org/healthy-lifestyle/infant-and-toddler-health/expert-answers/air-travel-with-infant/faq-20058539"
