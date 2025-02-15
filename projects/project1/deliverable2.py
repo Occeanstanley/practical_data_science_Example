@@ -3,25 +3,29 @@ from bs4 import BeautifulSoup
 import re
 from urllib.parse import urlparse
 import pandas as pd
+import spacy
 import os
 from google.colab import userdata
 from transformers import pipeline
 
-# Load API keys from Google Colab Secrets
-HF_TOKEN = userdata.get("HF_TOKEN")  # Retrieve Hugging Face Token securely
-SERP_API_KEY = userdata.get("SERPAPI_API_KEY")  # Retrieve SERP API Key securely
+# Load API keys securely from Google Colab Secrets
+HF_TOKEN = userdata.get("HF_TOKEN") or os.getenv("HF_TOKEN")  # Retrieve Hugging Face Token
+SERP_API_KEY = userdata.get("SERPAPI_API_KEY") or os.getenv("SERPAPI_API_KEY")  # Retrieve SERP API Key
 
 SERP_API_URL = "https://serpapi.com/search"
 
-# Check if the token is retrieved
+# Check if HF_TOKEN is retrieved
 if HF_TOKEN is None:
     print("⚠️ Warning: Hugging Face Token (HF_TOKEN) not found. Please check Google Colab Secrets!")
+
+# Load spaCy model for local NLP processing
+nlp = spacy.load("en_core_web_sm")
 
 # Load Hugging Face summarization model with authentication
 summarizer = pipeline(
     "summarization",
     model="facebook/bart-large-cnn",
-    token=HF_TOKEN,  # Authenticate using the HF token
+    token=HF_TOKEN,  # Authenticate using Hugging Face API
     device=0  # Use GPU if available
 )
 
@@ -41,13 +45,13 @@ def google_search(query):
     else:
         return {"error": f"SERP API Error: {response.status_code}"}
 
-# Function to summarize text dynamically adjusting length
+# Function to summarize text using Hugging Face model (dynamic length handling)
 def summarize_text(text):
     input_length = len(text.split())
 
     # Ensure max_length does not exceed input_length
     max_len = min(50, input_length, int(input_length * 1.5))
-    min_len = max(10, int(input_length * 0.5), min(25, int(input_length * 0.8)))
+    min_len = max(5, int(input_length * 0.5))
 
     return summarizer(text, max_length=max_len, min_length=min_len, do_sample=False)[0]['summary_text']
 
@@ -59,9 +63,10 @@ def get_domain_trust(domain):
     }
     return trust_scores.get(domain, 7 if domain.endswith((".org", ".com")) else 4)
 
-# Function to check HTTPS security
-def check_https(url):
-    return 5 if url.startswith("https") else 0
+# Function to generate a final star rating out of 5
+def generate_final_star_rating(score):
+    normalized_score = round((score / 100) * 5)  # Normalize final score to 5-star scale
+    return "⭐️" * max(1, min(normalized_score, 5))
 
 # Function to fetch webpage content
 def fetch_page_content(url):
@@ -86,6 +91,9 @@ def check_bias_score(domain):
 def check_citation_score(content):
     return 7 if content else 3
 
+def check_https(url):
+    return 5 if url.startswith("https") else 0
+
 # Function to evaluate URL validity
 def evaluate_url(url, keywords):
     content = fetch_page_content(url)
@@ -107,28 +115,30 @@ def evaluate_url(url, keywords):
     total_score = sum(scores.values())
     final_validity_score = (total_score / 55) * 100  # Normalize to 0-100
     scores["Final Validity Score"] = round(final_validity_score, 2)
+    final_star_rating = generate_final_star_rating(final_validity_score)
     
-    return {"URL": url, "Raw Scores": scores}
+    return {"URL": url, "Raw Scores": scores, "Final Star Rating": final_star_rating}
 
-# Example evaluation
+# Example URL evaluation
 test_url = "https://www.mayoclinic.org/healthy-lifestyle/infant-and-toddler-health/expert-answers/air-travel-with-infant/faq-20058539"
 keywords = ["newborn", "health", "flight", "risks", "air travel", "infant"]
 result = evaluate_url(test_url, keywords)
 
-# Perform search and summarization
+# Display results
+if "error" in result:
+    print("Error:", result["error"])
+else:
+    print("Raw Scores:", result["Raw Scores"])
+    print("Final Star Rating:", result["Final Star Rating"])
+    df = pd.DataFrame([result["Raw Scores"]])
+    df.to_csv("url_validity_results.csv", index=False)
+
+# Search and summarize user query
 user_prompt = "Are there any health risks for my newborn if I return home after an international flight?"
 search_results = google_search(user_prompt)
-
 if "error" in search_results:
-    summary = "No search results available."
+    print(search_results["error"])
 else:
     snippet = search_results.get("organic_results", [{}])[0].get("snippet", "No results found.")
     summary = summarize_text(snippet)
-
-# Display results
-print("Raw Scores:", result["Raw Scores"])
-print("Summary:", summary)
-
-# Save results to CSV
-df = pd.DataFrame([result["Raw Scores"]])
-df.to_csv("url_validity_results.csv", index=False)
+    print("Summary:", summary)

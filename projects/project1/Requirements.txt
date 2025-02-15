@@ -1,3 +1,8 @@
 requests
 beautifulsoup4
+lxml
 pandas
+spacy
+transformers
+torch
+urllib3
