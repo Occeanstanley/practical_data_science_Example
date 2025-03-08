@@ -1,0 +1,36 @@
+1)What is a Class Object?
+A class object is an instance of a class. A class is like a blueprint, and when I create an object from that class, it gets its own set of data and behaviors. For example, if I have a Car class, I can create multiple car objects, each with different colors and models."
+ Example :
+"If I create a Car class and then make a my_car = Car("Toyota", "Corolla"), my_car is an object of that class."
+
+
+2)What is a Docstring?
+A docstring is a special type of comment in Python that explains what a function, class, or module does. It is written inside three double quotes (""" """) and is useful for documentation."
+ Example :
+"For example, in a function like def greet(): """This function says hello.""" return "Hello!", the text inside """ """ is a docstring."
+
+
+3)How to Define __init__ in a Class Object?
+_init__ is a special function in Python that runs automatically when I create an object from a class. It is used to set up (initialize) the object's properties."
+Example :
+"For example, in a Person class, I can use def __init__(self, name, age): to store the person's name and age when a new object is created."
+
+
+4)What is a Method?
+How to answer in your own words:
+"A method is a function inside a class that performs actions related to that class. It works with the data stored in the class and can modify or return it."
+Example :
+"For example, if I have a Dog class, I can create a method bark(self) that returns 'The dog is barking!'. Then I can call dog1.bark() to make the dog 'speak'."
+
+
+5)How Do You Let a Function Fail Gracefully?
+How to answer in your own words:
+"I can use a try-except block to handle errors in my code so that the program does not crash when something goes wrong. Instead, it gives a useful message."
+Example :
+"For example, if I write a function to divide two numbers, I can use try-except to catch division by zero and show a friendly message instead of crashing."
+
+6)What’s a Standard Practice for a Return Statement?
+How to answer in your own words:
+"A return statement is used in a function to send back a result. Good practice means always returning a consistent type of value, keeping the function simple, and making sure the return value is useful."
+Example you can include in your own words:
+"For example, if I create a function add_numbers(a, b), it should always return a number, not a mix of numbers and strings."
