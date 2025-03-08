@@ -32,5 +32,5 @@ Example :
 6)What’s a Standard Practice for a Return Statement?
 How to answer in your own words:
 "A return statement is used in a function to send back a result. Good practice means always returning a consistent type of value, keeping the function simple, and making sure the return value is useful."
-Example you can include in your own words:
+Example :
 "For example, if I create a function add_numbers(a, b), it should always return a number, not a mix of numbers and strings."
