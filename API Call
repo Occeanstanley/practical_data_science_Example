@@ -1,4 +1,4 @@
- 1. What is an API call (in your own words)?
+ 1. What is an API call ?
 
 An API call is a request sent from a client (like a website or app) to a server, asking it to perform a specific action or return data. It acts like a bridge that lets different software systems communicate with each other over the internet using predefined rules.
 
