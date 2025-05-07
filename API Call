@@ -1,0 +1,33 @@
+ 1. What is an API call (in your own words)?
+
+An API call is a request sent from a client (like a website or app) to a server, asking it to perform a specific action or return data. It acts like a bridge that lets different software systems communicate with each other over the internet using predefined rules.
+
+ 2. What is an example we discussed to create an API call locally?
+
+One example from the video is using **FastAPI** to build a local API. We define a Python function with a route (e.g., `/predict`) and run it on a local server. Then we can test it using a browser or `curl` to make GET or POST requests.
+
+ 3. What is an example we discussed to create an API call on the cloud?
+
+A cloud example was deploying an API using **AWS API Gateway** in combination with **AWS Lambda**. We upload our function to Lambda and connect it to an API Gateway endpoint, which exposes the function over the internet through a public URL.
+
+ 4. What is the difference between FastAPI and creating API from AWS Gateway?
+
+ **FastAPI** is a Python web framework used for building and testing APIs locally or on a custom server. It’s fast and great for development and prototyping.
+**AWS API Gateway** is a cloud service that allows you to expose backend services (like Lambda functions) as APIs. It’s managed and scalable, suitable for production environments.
+
+In short: FastAPI is more for local or self-hosted API development, while API Gateway is for deploying APIs on the cloud with serverless infrastructure.
+
+5. What are the main steps to create an API call on AWS Gateway?
+
+1. **Write your logic** in a Lambda function (e.g., a Python script).
+2. **Upload the code** to AWS Lambda and test it.
+3. **Create a new API** using AWS API Gateway.
+4. **Connect the Lambda function** to an endpoint in the API.
+5. **Deploy the API** to a stage (e.g., `prod`).
+6. **Access the API** using the generated public URL.
+
+ 6. Professionally in the industry, how do developers ship products from one team to another? What's the usage of API here?
+
+In the industry, developers often ship products between teams through **modular services and APIs**. For example, a backend team may build an API that a frontend team uses to fetch data. APIs help separate responsibilities, allowing teams to work independently and integrate via well-defined interfaces. This reduces friction and increases scalability in software development.
+
+Prepared by Stanley Occean for Session 6 Submission*
